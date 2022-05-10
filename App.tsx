@@ -1,12 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import UploadButton from './src/UploadButton';
+import UploadButton, { UploadButtonHandle } from './src/UploadButton';
 
 export default function App() {
+  const linerButtonRef = useRef<UploadButtonHandle>(null)
+  const intermittentButtonRef = useRef<UploadButtonHandle>(null)
+
+  const linearProgress = () => {
+    for (let i = 0; i <= 100; i++) {
+      setTimeout(() => {
+        linerButtonRef.current?.setProgress(i)
+      }, 5 * i)
+    }
+  }
+
+  const intermittentProgress = () => {
+    for (let i = 0; i <= 100; i += 25) {
+      setTimeout(() => {
+        intermittentButtonRef.current?.setProgress(i)
+      }, 30 * i)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <UploadButton />
+      <View style={{ justifyContent: 'space-evenly', flex: 1 }}>
+        <UploadButton ref={linerButtonRef} onPress={linearProgress} />
+        <UploadButton ref={intermittentButtonRef} onPress={intermittentProgress} />
+      </View>
     </View>
   );
 }

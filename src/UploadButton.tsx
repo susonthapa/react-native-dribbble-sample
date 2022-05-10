@@ -1,9 +1,39 @@
-import { useRef, useState } from "react"
+import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 import Animated, { AnimatableValue, interpolate, runOnJS, useAnimatedStyle, Easing, useSharedValue, withRepeat, withTiming, withDecay, withDelay } from "react-native-reanimated"
 import CloudUpload from './icons/CloudUpload'
 
-const UploadButton = () => {
+export type UploadButtonHandle = {
+    setProgress: (progress: number) => void,
+}
+
+type UploadButtonProp = {
+    onPress: () => void
+}
+
+const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress }, ref) => {
+    const prevProgress = useRef<number>(0)
+    useImperativeHandle(ref, () => ({
+        setProgress: (progress: number) => {
+            for (let i = prevProgress.current; i <= progress; i++) {
+                setTimeout(() => {
+                    setProgress(i.toString() + '%')
+                    if (i === 100) {
+                        opacityValue.value = 0
+                        setTimeout(() => {
+                            setProgress('Completed!')
+                            setTimeout(() => {
+                                toggleAnimation()
+                            }, 1000)
+                        }, 300)
+                    }
+                    progressValue.value = i
+                }, 20 * i)
+            }
+            prevProgress.current = progress
+        }
+    }))
+
     const pressScale = useSharedValue(1)
     const pressTranslate = useSharedValue(0)
     const progressTranslate = useSharedValue(0)
@@ -118,7 +148,7 @@ const UploadButton = () => {
         pressTranslate.value = active ? buttonWidth.current : 0
         progressTranslate.value = active ? 0 : (-buttonWidth.current + 24)
         if (activeRef.current) {
-            simulateProgress()
+            // simulateProgress()
         } else {
             revertProgress()
         }
@@ -131,6 +161,7 @@ const UploadButton = () => {
                 opacityRef.current = 1
                 if (!activeRef.current) {
                     toggleAnimation()
+                    onPress()
                 }
             }}
             style={{
@@ -223,6 +254,6 @@ const UploadButton = () => {
             </Animated.View>
         </TouchableOpacity>
     )
-}
+})
 
 export default UploadButton

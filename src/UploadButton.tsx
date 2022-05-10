@@ -161,7 +161,9 @@ const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress
                 opacityRef.current = 1
                 if (!activeRef.current) {
                     toggleAnimation()
-                    onPress()
+                    setTimeout(() => {
+                        onPress()
+                    }, 500)
                 }
             }}
             style={{

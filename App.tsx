@@ -8,19 +8,23 @@ export default function App() {
   const intermittentButtonRef = useRef<UploadButtonHandle>(null)
 
   const linearProgress = () => {
-    for (let i = 0; i <= 100; i++) {
-      setTimeout(() => {
-        linerButtonRef.current?.setProgress(i)
-      }, 5 * i)
-    }
+    setTimeout(() => {
+      for (let i = 0; i <= 100; i++) {
+        setTimeout(() => {
+          linerButtonRef.current?.setProgress(i)
+        }, 5 * i)
+      }
+    }, 1000)
   }
 
   const intermittentProgress = () => {
-    for (let i = 0; i <= 100; i += 25) {
-      setTimeout(() => {
-        intermittentButtonRef.current?.setProgress(i)
-      }, 30 * i)
-    }
+    setTimeout(() => {
+      for (let i = 0; i <= 100; i += 25) {
+        setTimeout(() => {
+          intermittentButtonRef.current?.setProgress(i)
+        }, 30 * i)
+      }
+    }, 1000)
   }
 
   return (

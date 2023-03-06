@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 import Animated, { AnimatableValue, interpolate, runOnJS, useAnimatedStyle, Easing, useSharedValue, withRepeat, withTiming, withDecay, withDelay } from "react-native-reanimated"
-import CloudUpload from './icons/CloudUpload'
+import CloudUpload from './CloudUpload'
 
 export type UploadButtonHandle = {
     setProgress: (progress: number) => void,

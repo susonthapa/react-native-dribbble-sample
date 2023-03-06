@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import UploadButton, { UploadButtonHandle } from './src/UploadButton';
+import UploadButton, { UploadButtonHandle } from './src/UploadButton/UploadButton';
 
 export default function App() {
   const linerButtonRef = useRef<UploadButtonHandle>(null)

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useRef } from 'react';
+import { StyleSheet, View } from 'react-native';
 import UploadButton, { UploadButtonHandle } from './src/UploadButton/UploadButton';
 
 export default function App() {

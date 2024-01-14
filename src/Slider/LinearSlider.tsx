@@ -17,13 +17,16 @@ const LinearSlider = () => {
 
   const pan = Gesture.Pan()
     .onChange((e) => {
-      if (e.translationX > 0) {
-        const maxLimit = (WIDTH * (1 - 0.375) - 8)
-        if (e.translationX < maxLimit) {
-          offset.value = e.translationX
-        }
-      }
+      console.log(`TODO: event: transX: ${e.translationX}, changeX: ${e.changeX}, velocityX: ${e.velocityX}`);
+      let currentValue = offset.value
 
+      const maxLimit = (WIDTH * (1 - 0.375) - 12)
+      if ((e.changeX > 0 && offset.value < maxLimit)) {
+        currentValue = Math.min(maxLimit, currentValue + e.changeX)
+      } else if (e.changeX < 0 && offset.value > 0) {
+        currentValue = Math.max(0, currentValue + e.changeX)
+      }
+      offset.value = currentValue
     })
     .onFinalize(() => {
     })

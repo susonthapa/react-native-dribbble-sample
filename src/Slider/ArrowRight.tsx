@@ -9,30 +9,32 @@ type Props = SvgProps & {
 }
 
 const ArrowRight: FC<Props> = ({ animateToTick, ...props }) => {
-  const dashOffset = useSharedValue(0)
+  const dashOffset = useSharedValue(-3)
 
   useEffect(() => {
     if (animateToTick === undefined) {
       return
     }
     if (animateToTick) {
-      dashOffset.value = withTiming(-25, {
+      dashOffset.value = withTiming(-27, {
         duration: 500,
       })
     } else {
-      dashOffset.value = withTiming(0, {
+      dashOffset.value = withTiming(-3, {
         duration: 500
       })
     }
   }, [animateToTick])
 
   return (
-    <Svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 12 12" {...props}>
+    <Svg xmlns="http://www.w3.org/2000/svg" viewBox="-7.1 -7.1 14.2 14.2" {...props}>
       <AnimatedPath
         fill="none"
-        stroke="white"
-        strokeWidth={1}
-        strokeDasharray="17 25"
+        stroke="#CACAD1"
+        strokeWidth={1.2}
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeDasharray="11 30"
         strokeDashoffset={dashOffset}
         d="m0 6 6-6-6-6-6 6 3 3 6-6"
       />

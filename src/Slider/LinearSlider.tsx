@@ -101,6 +101,12 @@ const LinearSlider = () => {
       borderWidth: 2,
       justifyContent: 'center',
       padding: 4,
+      backgroundColor: 'white',
+      shadowColor: '#333358',
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.4,
+      shadowRadius: 24,
+      elevation: 8
     }, sliderStyle]}>
       <GestureDetector gesture={pan}>
         <Animated.View style={[{
@@ -108,7 +114,7 @@ const LinearSlider = () => {
           width: WIDTH * 0.375,
           height: '100%',
           borderRadius: HEIGHT / 2,
-          padding: 14
+          padding: 12
         }, ovalStyle]}>
           <ArrowRight animateToTick={isChecked} />
         </Animated.View>

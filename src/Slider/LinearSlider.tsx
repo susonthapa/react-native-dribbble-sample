@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { Easing, runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from "react-native-reanimated";
 import ArrowRight from "./ArrowRight";
+import Ripple from "./Ripple";
 
 const WIDTH = 200
 const HEIGHT = 70
@@ -114,9 +116,20 @@ const LinearSlider = () => {
           width: WIDTH * 0.375,
           height: '100%',
           borderRadius: HEIGHT / 2,
-          padding: 12
+          overflow: 'hidden',
         }, ovalStyle]}>
-          <ArrowRight animateToTick={isChecked} />
+          <View style={{
+            padding: 12,
+          }}>
+            <ArrowRight animateToTick={isChecked} />
+          </View>
+          <Ripple enableAnimation={isChecked ?? false} style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }} />
         </Animated.View>
       </GestureDetector>
     </Animated.View>

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { Easing, runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from "react-native-reanimated";
 import ArrowRight from "./ArrowRight";
@@ -7,6 +7,29 @@ import Ripple from "./Ripple";
 
 const KNOB_WIDTH_FACTOR = 0.375
 const PRIMARY_COLOR = '#333358'
+
+const styles = StyleSheet.create({
+  container: {
+    borderColor: PRIMARY_COLOR,
+    borderWidth: 2,
+    justifyContent: 'center',
+    padding: 4,
+    backgroundColor: 'white',
+    shadowColor: PRIMARY_COLOR,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
+    elevation: 8
+  },
+  knob: {
+    backgroundColor: PRIMARY_COLOR,
+    height: '100%',
+    overflow: 'hidden',
+  },
+  arrowContainer: {
+    padding: 12,
+  }
+})
 
 function getIdleAnimation() {
   "worklet"
@@ -33,7 +56,7 @@ const LinearSlider: FC<Props> = ({ width = 225, height = 70 }) => {
   const ovalOffset = useSharedValue(0)
   const sliderOffset = useSharedValue(0)
   const maxKnobLimit = (width * (1 - 0.375) - 12)
-  const ovalStyle = useAnimatedStyle(() => {
+  const knobStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: ovalOffset.value }]
     }
@@ -103,37 +126,16 @@ const LinearSlider: FC<Props> = ({ width = 225, height = 70 }) => {
       width: width,
       height: height,
       borderRadius: height / 2,
-      borderColor: PRIMARY_COLOR,
-      borderWidth: 2,
-      justifyContent: 'center',
-      padding: 4,
-      backgroundColor: 'white',
-      shadowColor: PRIMARY_COLOR,
-      shadowOffset: { width: 0, height: 12 },
-      shadowOpacity: 0.4,
-      shadowRadius: 24,
-      elevation: 8
-    }, sliderStyle]}>
+    }, styles.container, sliderStyle]}>
       <GestureDetector gesture={pan}>
         <Animated.View style={[{
-          backgroundColor: PRIMARY_COLOR,
           width: width * KNOB_WIDTH_FACTOR,
-          height: '100%',
           borderRadius: height / 2,
-          overflow: 'hidden',
-        }, ovalStyle]}>
-          <View style={{
-            padding: 12,
-          }}>
+        }, styles.knob, knobStyle]}>
+          <View style={styles.arrowContainer}>
             <ArrowRight animateToTick={isChecked} />
           </View>
-          <Ripple enableAnimation={isChecked ?? false} style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-          }} />
+          <Ripple enableAnimation={isChecked ?? false} style={StyleSheet.absoluteFill} />
         </Animated.View>
       </GestureDetector>
     </Animated.View>

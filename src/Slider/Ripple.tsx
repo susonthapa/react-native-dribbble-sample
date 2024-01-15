@@ -13,15 +13,15 @@ const Ripple: FC<Props> = ({ enableAnimation, ...props }) => {
   const radius = useSharedValue(0)
   const svgStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(radius.value, [10, 15], [1, 0], Extrapolation.CLAMP)
+      opacity: interpolate(radius.value, [14, 20], [1, 0], Extrapolation.CLAMP)
     }
   })
 
   useEffect(() => {
     if (enableAnimation) {
-      radius.value = withTiming(15, {
-        duration: 500,
-        easing: Easing.inOut(Easing.quad)
+      radius.value = withTiming(20, {
+        duration: 600,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1)
       })
     } else {
       radius.value = 0

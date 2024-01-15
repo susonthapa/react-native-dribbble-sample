@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { Easing, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from "react-native-reanimated";
+import Animated, { Easing, runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from "react-native-reanimated";
+import ArrowRight from "./ArrowRight";
 
 const WIDTH = 200
 const HEIGHT = 70
@@ -22,6 +23,7 @@ function getIdleAnimation() {
 
 
 const LinearSlider = () => {
+  const [isChecked, setIsChecked] = useState<boolean | undefined>(undefined)
   const ovalOffset = useSharedValue(0)
   const sliderOffset = useSharedValue(0)
   const maxLimit = (WIDTH * (1 - 0.375) - 12)
@@ -64,6 +66,7 @@ const LinearSlider = () => {
             getIdleAnimation()
           )
         )
+        runOnJS(setIsChecked)(false)
       } else {
         ovalOffset.value = withTiming(currentValue, {
           easing: Easing.exp
@@ -81,6 +84,7 @@ const LinearSlider = () => {
           duration: 1000
         })
       )
+      runOnJS(setIsChecked)(true)
     }
   })
 
@@ -103,8 +107,10 @@ const LinearSlider = () => {
           backgroundColor: '#333358',
           width: WIDTH * 0.375,
           height: '100%',
-          borderRadius: HEIGHT / 2
+          borderRadius: HEIGHT / 2,
+          padding: 14
         }, ovalStyle]}>
+          <ArrowRight animateToTick={isChecked} />
         </Animated.View>
       </GestureDetector>
     </Animated.View>

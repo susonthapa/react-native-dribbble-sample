@@ -10,10 +10,10 @@ type Props = SvgProps & {
 }
 
 const Ripple: FC<Props> = ({ enableAnimation, ...props }) => {
-  const radius = useSharedValue(0)
+  const radius = useSharedValue(15)
   const svgStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(radius.value, [14, 20], [1, 0], Extrapolation.CLAMP)
+      opacity: interpolate(radius.value, [14, 20], [0.8, 0], Extrapolation.CLAMP)
     }
   })
 
@@ -34,7 +34,7 @@ const Ripple: FC<Props> = ({ enableAnimation, ...props }) => {
         cx={10}
         cy={10}
         r={radius}
-        fill="#7A73B6"
+        fill="#c588fc"
       />
     </AnimatedSvg>
   )

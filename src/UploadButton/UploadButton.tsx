@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
-import Animated, { AnimatableValue, interpolate, runOnJS, useAnimatedStyle, Easing, useSharedValue, withRepeat, withTiming, withDecay, withDelay } from "react-native-reanimated"
+import Animated, { AnimatableValue, Easing, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming } from "react-native-reanimated"
 import CloudUpload from './CloudUpload'
 
 export type UploadButtonHandle = {
@@ -37,12 +37,11 @@ const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress
     const pressScale = useSharedValue(1)
     const pressTranslate = useSharedValue(0)
     const progressTranslate = useSharedValue(0)
-    const buttonWidth = useRef<number>(0)
     const progressValue = useSharedValue(0)
     const opacityValue = useSharedValue(1)
+    const buttonWidth = useSharedValue(0)
 
     const activeRef = useRef<boolean>()
-    const opacityRef = useRef<number>(0)
     const [progress, setProgress] = useState('')
 
     const resetAnim = (isFinished: boolean) => {
@@ -120,7 +119,7 @@ const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress
     })
 
     const progressWidthStyle = useAnimatedStyle(() => {
-        const width = interpolate(progressValue.value, [0, 100], [0, buttonWidth.current], 'clamp')
+        const width = interpolate(progressValue.value, [0, 100], [0, buttonWidth.value], 'clamp')
         return {
             width: width,
         }
@@ -137,16 +136,16 @@ const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress
         }
     })
 
-    const widthStyle = buttonWidth.current !== 0 ? {
-        width: buttonWidth.current
+    const widthStyle = buttonWidth.value !== 0 ? {
+        width: buttonWidth.value
     } : {}
 
     const toggleAnimation = () => {
         const active = !activeRef.current
         activeRef.current = active
         pressScale.value = active ? 1.2 : 1
-        pressTranslate.value = active ? buttonWidth.current : 0
-        progressTranslate.value = active ? 0 : (-buttonWidth.current + 24)
+        pressTranslate.value = active ? buttonWidth.value : 0
+        progressTranslate.value = active ? 0 : (-buttonWidth.value + 24)
         if (activeRef.current) {
             // simulateProgress()
         } else {
@@ -158,7 +157,6 @@ const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress
         <TouchableOpacity
             activeOpacity={1}
             onPress={() => {
-                opacityRef.current = 1
                 if (!activeRef.current) {
                     toggleAnimation()
                     setTimeout(() => {
@@ -191,9 +189,10 @@ const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress
                 animatedStyle,
                 widthStyle,
             ]} onLayout={(e) => {
-                if (buttonWidth.current === 0) {
-                    buttonWidth.current = e.nativeEvent.layout.width
-                    progressTranslate.value = -buttonWidth.current + 24
+                const width = e.nativeEvent.layout.width
+                if (buttonWidth.value === 0) {
+                    buttonWidth.value = width
+                    progressTranslate.value = -width + 24
                 }
             }}>
                 <Animated.View style={[
@@ -214,7 +213,7 @@ const UploadButton = forwardRef<UploadButtonHandle, UploadButtonProp>(({ onPress
                 }}>
                     <Animated.View style={[
                         {
-                            width: buttonWidth.current - 48,
+                            width: buttonWidth.value - 48,
                             position: 'absolute',
                             bottom: 0,
                             top: 0,

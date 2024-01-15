@@ -27,7 +27,9 @@ const ArrowRight: FC<Props> = ({ animateToTick, ...props }) => {
   }, [animateToTick])
 
   return (
-    <Svg xmlns="http://www.w3.org/2000/svg" viewBox="-7.1 -7.1 14.2 14.2" {...props}>
+    <Svg
+      viewBox="-7.1 -7.1 14.2 14.2"
+      {...props}>
       <AnimatedPath
         fill="none"
         stroke="#CACAD1"

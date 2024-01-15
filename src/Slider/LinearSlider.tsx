@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { Easing, runOnJS, useAnimatedReaction, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from "react-native-reanimated";
 import ArrowRight from "./ArrowRight";
 import Ripple from "./Ripple";
 
-const WIDTH = 200
-const HEIGHT = 70
+const KNOB_WIDTH_FACTOR = 0.375
+const PRIMARY_COLOR = '#333358'
 
 function getIdleAnimation() {
   "worklet"
@@ -23,12 +23,16 @@ function getIdleAnimation() {
   ), -1)
 }
 
+type Props = {
+  width?: number,
+  height?: number,
+}
 
-const LinearSlider = () => {
+const LinearSlider: FC<Props> = ({ width = 225, height = 70 }) => {
   const [isChecked, setIsChecked] = useState<boolean | undefined>(undefined)
   const ovalOffset = useSharedValue(0)
   const sliderOffset = useSharedValue(0)
-  const maxLimit = (WIDTH * (1 - 0.375) - 12)
+  const maxKnobLimit = (width * (1 - 0.375) - 12)
   const ovalStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: ovalOffset.value }]
@@ -46,18 +50,18 @@ const LinearSlider = () => {
       let currentValue = ovalOffset.value
 
       const updatedValue = currentValue + e.changeX
-      if ((e.changeX > 0 && ovalOffset.value < maxLimit)) {
-        currentValue = Math.min(maxLimit, updatedValue)
+      if ((e.changeX > 0 && ovalOffset.value < maxKnobLimit)) {
+        currentValue = Math.min(maxKnobLimit, updatedValue)
       } else if (e.changeX < 0 && ovalOffset.value > 0) {
         currentValue = Math.max(0, currentValue + e.changeX)
       }
       ovalOffset.value = currentValue
     })
-    .onFinalize((e) => {
+    .onFinalize(() => {
       let currentValue = ovalOffset.value
-      const halfLimit = maxLimit / 2
+      const halfLimit = maxKnobLimit / 2
       if (currentValue >= halfLimit) {
-        currentValue = maxLimit
+        currentValue = maxKnobLimit
       } else {
         currentValue = 0
       }
@@ -79,7 +83,7 @@ const LinearSlider = () => {
   useAnimatedReaction(() => {
     return ovalOffset.value
   }, (current, previous) => {
-    if (current !== previous && current === maxLimit) {
+    if (current !== previous && current === maxKnobLimit) {
       sliderOffset.value = withSequence(
         withTiming(15, { duration: 100 }),
         withSpring(0, {
@@ -96,15 +100,15 @@ const LinearSlider = () => {
 
   return (
     <Animated.View style={[{
-      width: WIDTH,
-      height: HEIGHT,
-      borderRadius: HEIGHT / 2,
-      borderColor: '#333358',
+      width: width,
+      height: height,
+      borderRadius: height / 2,
+      borderColor: PRIMARY_COLOR,
       borderWidth: 2,
       justifyContent: 'center',
       padding: 4,
       backgroundColor: 'white',
-      shadowColor: '#333358',
+      shadowColor: PRIMARY_COLOR,
       shadowOffset: { width: 0, height: 12 },
       shadowOpacity: 0.4,
       shadowRadius: 24,
@@ -112,10 +116,10 @@ const LinearSlider = () => {
     }, sliderStyle]}>
       <GestureDetector gesture={pan}>
         <Animated.View style={[{
-          backgroundColor: '#333358',
-          width: WIDTH * 0.375,
+          backgroundColor: PRIMARY_COLOR,
+          width: width * KNOB_WIDTH_FACTOR,
           height: '100%',
-          borderRadius: HEIGHT / 2,
+          borderRadius: height / 2,
           overflow: 'hidden',
         }, ovalStyle]}>
           <View style={{
